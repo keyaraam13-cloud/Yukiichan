@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-screen h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .welcome-screen p {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .section-title {
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            font-size: 1.5rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .product-card.selected {
+            background: rgba(79, 172, 254, 0.3);
+            border-color: #4facfe;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .payment-method {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .payment-method:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .payment-method.selected {
+            background: rgba(79, 172, 254, 0.3);
+            border-color: #4facfe;
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .payment-details {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            display: none;
+        }
+
+        .payment-info {
+            margin-bottom: 15px;
+        }
+
+        .payment-info p {
+            margin: 5px 0;
+            font-size: 1.1rem;
+        }
+
+        .copy-btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background: #3a9ae8;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .checkout-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PAYMENT PANEL</h1>
+        
+        <div class="welcome-screen" id="welcomeScreen">
+            <h2>Selamat Datang</h2>
+            <p>Silakan tekan tombol START untuk melanjutkan ke menu pembayaran</p>
+            <button class="start-btn" id="startBtn">START</button>
+        </div>
+        
+        <div class="main-content" id="mainContent">
+            <h2 class="section-title">Pilih Produk</h2>
+            <div class="products-grid" id="productsGrid">
+                <!-- Produk akan ditambahkan melalui JavaScript -->
+            </div>
+            
+            <h2 class="section-title">Metode Pembayaran</h2>
+            <div class="payment-methods" id="paymentMethods">
+                <!-- Metode pembayaran akan ditambahkan melalui JavaScript -->
+            </div>
+            
+            <div class="payment-details" id="paymentDetails">
+                <!-- Detail pembayaran akan ditampilkan di sini -->
+            </div>
+            
+            <button class="checkout-btn" id="checkoutBtn" disabled>Lanjutkan Pembayaran</button>
+        </div>
+    </div>
+
+    <script>
+        // Data produk
+        const products = [
+            { name: "JSA", price: 5000 },
+            { name: "PT PANEL", price: 7000 },
+            { name: "OWEN PANEL", price: 5000 },
+            { name: "CEO PANEL", price: 10000 },
+            { name: "ADP", price: 8000 },
+            { name: "STAF", price: 20000 }
+        ];
+
+        // Data metode pembayaran
+        const paymentMethods = [
+            { name: "DANA", number: "0881010703290", nameAccount: "DARXXX" },
+            { name: "GOPAY", number: "085328926698", nameAccount: "WAWA" },
+            { name: "OVO", number: "085814448535", nameAccount: "WAWA" }
+        ];
+
+        // Variabel untuk menyimpan pilihan
+        let selectedProduct = null;
+        let selectedPaymentMethod = null;
+
+        // Fungsi untuk memulai aplikasi
+        document.getElementById('startBtn').addEventListener('click', function() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            loadProducts();
+            loadPaymentMethods();
+        });
+
+        // Fungsi untuk memuat produk
+        function loadProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
+                `;
+                
+                productCard.addEventListener('click', function() {
+                    // Hapus seleksi dari semua produk
+                    document.querySelectorAll('.product-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    
+                    // Tambahkan seleksi ke produk yang dipilih
+                    productCard.classList.add('selected');
+                    selectedProduct = product;
+                    
+                    // Periksa apakah kedua pilihan sudah dipilih
+                    checkSelection();
+                });
+                
+                productsGrid.appendChild(productCard);
+            });
+        }
+
+        // Fungsi untuk memuat metode pembayaran
+        function loadPaymentMethods() {
+            const paymentMethodsContainer = document.getElementById('paymentMethods');
+            paymentMethodsContainer.innerHTML = '';
+            
+            paymentMethods.forEach(method => {
+                const paymentMethod = document.createElement('div');
+                paymentMethod.className = 'payment-method';
+                paymentMethod.innerHTML = `
+                    <div class="payment-icon">${method.name}</div>
+                    <div class="payment-name">${method.name}</div>
+                `;
+                
+                paymentMethod.addEventListener('click', function() {
+                    // Hapus seleksi dari semua metode pembayaran
+                    document.querySelectorAll('.payment-method').forEach(method => {
+                        method.classList.remove('selected');
+                    });
+                    
+                    // Tambahkan seleksi ke metode yang dipilih
+                    paymentMethod.classList.add('selected');
+                    selectedPaymentMethod = method;
+                    
+                    // Tampilkan detail pembayaran
+                    showPaymentDetails();
+                    
+                    // Periksa apakah kedua pilihan sudah dipilih
+                    checkSelection();
+                });
+                
+                paymentMethodsContainer.appendChild(paymentMethod);
+            });
+        }
+
+        // Fungsi untuk menampilkan detail pembayaran
+        function showPaymentDetails() {
+            const paymentDetails = document.getElementById('paymentDetails');
+            paymentDetails.style.display = 'block';
+            paymentDetails.innerHTML = `
+                <h3>Detail Pembayaran ${selectedPaymentMethod.name}</h3>
+                <div class="payment-info">
+                    <p><strong>Nomor:</strong> ${selectedPaymentMethod.number}</p>
+                    <p><strong>Nama:</strong> ${selectedPaymentMethod.nameAccount}</p>
+                </div>
+                <button class="copy-btn" id="copyNumberBtn">Salin Nomor</button>
+            `;
+            
+            // Tambahkan event listener untuk tombol salin
+            document.getElementById('copyNumberBtn').addEventListener('click', function() {
+                navigator.clipboard.writeText(selectedPaymentMethod.number)
+                    .then(() => {
+                        alert('Nomor berhasil disalin!');
+                    })
+                    .catch(err => {
+                        console.error('Gagal menyalin: ', err);
+                    });
+            });
+        }
+
+        // Fungsi untuk memeriksa apakah kedua pilihan sudah dipilih
+        function checkSelection() {
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            if (selectedProduct && selectedPaymentMethod) {
+                checkoutBtn.disabled = false;
+                checkoutBtn.textContent = `Bayar Rp ${selectedProduct.price.toLocaleString('id-ID')} dengan ${selectedPaymentMethod.name}`;
+            } else {
+                checkoutBtn.disabled = true;
+                checkoutBtn.textContent = 'Lanjutkan Pembayaran';
+            }
+        }
+
+        // Event listener untuk tombol checkout
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+            if (selectedProduct && selectedPaymentMethod) {
+                alert(`Terima kasih! Anda telah memilih ${selectedProduct.name} seharga Rp ${selectedProduct.price.toLocaleString('id-ID')} dan akan membayar dengan ${selectedPaymentMethod.name}. Silakan transfer ke nomor ${selectedPaymentMethod.number} (${selectedPaymentMethod.nameAccount})`);
+            }
+        });
+    </script>
+</body>
+</html>
